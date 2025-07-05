@@ -1,103 +1,64 @@
-import Image from "next/image";
+    "use client";
+import Balance from "@/components/Balance";
+import Monthly from "@/components/Monthly";
+import Profile from "@/components/Profile";
+    import {BarChart,ResponsiveContainer,Bar,XAxis,YAxis,CartesianGrid,Tooltip,Legend,PieChart,Pie,Sector,Cell} from "recharts"
+    export default function Page(){
+        const spendingData = [
+    { name: 'JAN', food: 300, medical: 120, groceries: 250, transport: 80, rent: 800, other: 150 },
+    { name: 'FEB', food: 280, medical: 90, groceries: 230, transport: 75, rent: 800, other: 120 },
+    { name: 'MAR', food: 350, medical: 150, groceries: 260, transport: 85, rent: 800, other: 100 },
+    { name: 'APR', food: 300, medical: 100, groceries: 240, transport: 70, rent: 800, other: 180 },
+    { name: 'MAY', food: 400, medical: 200, groceries: 300, transport: 90, rent: 800, other: 130 },
+    { name: 'JUN', food: 320, medical: 110, groceries: 220, transport: 60, rent: 800, other: 140 },
+    { name: 'JUL', food: 1000, medical: 300, groceries: 0, transport: 200, rent: 0, other: 1000 },
+    ];
+        const budget=2500;
+        const date=new Date();
+        const spent=Object.entries(spendingData[date.getMonth()]).filter(([key])=>(key!=="name" )).reduce((total,[key,value])=>total+value,0);
+        const data=Object.entries(spendingData[date.getMonth()]).filter(([key])=>(key!=="name" )).map(([key,value])=>({name:key,value:value}));
+        const COLORS = [
+    "#ea580c",
+    "#2563eb",
+    "#059669",
+    "#9333ea",
+    "#dc2626",
+    "#334155"
+    ];
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    const transactions = [
+  { description: "Lunch at Subway", amount: 12.99, category: "food" },
+  { description: "Weekly groceries - Walmart", amount: 85.75, category: "groceries" },
+  { description: "Uber ride to office", amount: 14.50, category: "transport" },
+  { description: "Monthly rent payment", amount: 800.00, category: "rent" },
+  { description: "Prescription medicines", amount: 45.30, category: "medical" },
+  { description: "Coffee with friends", amount: 6.20, category: "food" },
+  { description: "Electricity bill", amount: 120.00, category: "other" },
+  { description: "Refilled pantry items", amount: 58.40, category: "groceries" },
+  { description: "Train ticket to hometown", amount: 90.00, category: "transport" },
+  { description: "Doctor consultation", amount: 75.00, category: "medical" },
+  { description: "Amazon purchase (books)", amount: 39.99, category: "other" },
+  { description: "Dinner - Pizza Hut", amount: 24.50, category: "food" }
+];
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
-}
+
+        return <>
+            <>
+            <div className="w-screen flex flex-col sm:flex-col md:flex-row lg:flex-row relative justify-start bg-gray-200 items-center min-h-screen bg-gradient-to-br">
+                    <div className="h-[10dvh] lg:h-[100dvh] md:h-[100dvh] w-full sm:w-full md:w-[60%] lg:w-[30%] p-5">
+                        <Profile></Profile>
+                    </div>
+                    <div className="lg:w-[75%] w-full sm:h-[150dvh] lg:h-[100dvh] md:h-[100dvh] h-[150dvh]  overflow-y-auto ">
+                        <div className="w-full flex flex-col gap-5 p-5 h-full">
+                            <Monthly spendingData={spendingData}></Monthly>
+                            <div className="h-[100dvh] sm:h-[100dvh] md:h-[100dvh] lg:h-[50dvh] py-3  w-full flex-col gap-3 flex lg:flex-row md:flex-col md:items-center md:justify-between md:gap-3 items-center lg:justify-around">
+                            <Balance></Balance>
+                            <div className="flex lg:w-[40%] h-[50dvh] md:h-[95%] sm:h-[95%] w-full border border-gray-400/50 bg-gray-300 rounded-2xl">
+                            </div>
+                        </div>  
+                        </div>
+                    </div>
+            </div>
+        </>
+        </>
+    }
