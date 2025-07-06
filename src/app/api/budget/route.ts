@@ -31,6 +31,9 @@ export async function GET(req:NextRequest){
 
 export async function POST(req:NextRequest){
     const {newBudget,month,year}=await req.json();
+    if (!newBudget || !month || !year) {
+  return NextResponse.json({ success: false, msg: "Missing required fields" }, { status: 400 });
+}
     try{
         const check=await Budget.find({
             month:month,year:year
@@ -47,18 +50,20 @@ export async function POST(req:NextRequest){
                     }
         });
         const spent=transactions.reduce((total,ele)=>total+ele.amount,0);
+        console.log(spent);
         if(newBudget<spent){
             return NextResponse.json({success:false,msg:"Not allowed"},{status:400});
         }
+        const balance = newBudget - spent;
         const budget=await Budget.findOneAndUpdate(
             {month,year},
-            {budget:newBudget},
+            {budget:newBudget,balance},
             {new:true}
         )
         return NextResponse.json({success:true,budget},{status:200});
     }
     catch(e){
         console.log(e);
-        return NextResponse.json({success:false,error:e});
+        return NextResponse.json({success:false,error:e},{status:500});
     }
 }

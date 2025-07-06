@@ -1,9 +1,16 @@
 import { ConnectDb } from "@/lib/db";
+import Budget from "@/models/Budget";
 import Transactions from "@/models/Transactions";
 import { NextRequest,NextResponse } from "next/server";
-import mongoose from "mongoose";
-import { error } from "console";
-import Budget from "@/models/Budget";
+
+async function ensureBudget(year: number, month: number) {
+  let budget = await Budget.findOne({ year, month });
+  if (!budget) {
+    budget = await Budget.create({ year, month });
+  }
+  return budget;
+}
+
 
 export async function POST(req:NextRequest){
     await ConnectDb();
@@ -13,19 +20,14 @@ export async function POST(req:NextRequest){
             return NextResponse.json({success:false},{status:400});
         }
         const date = new Date(body.date);
+        if (!body.date) {
+        return NextResponse.json({ success: false, msg: "Missing date" }, { status: 400 });
+        }          
         const year=date.getFullYear();
         const month=date.getMonth()+1;
-        const budget=await Budget.find({
-            year:year,
-            month:month
-        });
-        if(budget.length===0){
-            await Budget.create({year,month});
-            const newTransaction=await Transactions.create(body);
-            return NextResponse.json({newTransaction,success:true},{status:200});
-        }
-        await Budget.findOneAndUpdate({month,year},{$inc:{budget:-body.amount}},{new:true})
+        await ensureBudget(year, month);
         const newTransaction=await Transactions.create(body);
+        await Budget.findOneAndUpdate({month,year},{$inc:{balance:-body.amount}},{new:true})
         return NextResponse.json({newTransaction,success:true},{status:200});
     }
     catch(e){

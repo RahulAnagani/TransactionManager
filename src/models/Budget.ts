@@ -7,6 +7,9 @@ const BudgetSchema=new mongoose.Schema({
     year:{
         type:Number,
         required:true
+    },
+    balance:{
+        type:Number,default:0
     }
     ,month:{
         type:Number,required:true
