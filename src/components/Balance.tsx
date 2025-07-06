@@ -70,10 +70,7 @@ interface BudgetResponse {
                                         height={"100%"}
                                         >   
                                             <PieChart
-                                            style={{ outline: "none" }}
-                                            width={"100%"}
-                                            height={"100%"}
-                                            >
+            style={{ outline: "none", width: "100%", height: "100%" }}>
                                                 
                                                 <Pie
                                                 startAngle={90}
