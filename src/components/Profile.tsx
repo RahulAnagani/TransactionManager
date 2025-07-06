@@ -15,6 +15,9 @@ import {
 } from 'react-icons/fa';
 
 import { CiCircleMore } from "react-icons/ci";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/lib/store";
+import { setTransactions } from "@/lib/features/transactionsSlice";
 
 interface Transaction {
     _id: string;
@@ -45,16 +48,18 @@ interface CategoryIcons {
 }
 
 export default function Profile({ onViewAllTransactions, onAddTransaction, onEditTransaction }: ProfileProps) {
-    const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const date: Date = new Date();
-
+    const transactions=useSelector((state:RootState)=>state.transactions);
+    const disp=useDispatch<AppDispatch>();
     useEffect(() => {
         const fetchTrans = async ()=> {
             try {
                 const resp: Response = await fetch(`/api/transactions?year=${date.getFullYear()}&month=${date.getMonth()+1}`);
                 const data: TransactionResponse = await resp.json();
-                setTransactions(data.transactions || []);
+                disp(setTransactions({
+                    transactions:data.transactions
+                }))
             } catch (error) {
                 console.error('Error fetching transactions:', error);
             } finally {
@@ -91,7 +96,7 @@ export default function Profile({ onViewAllTransactions, onAddTransaction, onEdi
         return icons[category] || icons.other;
     };
 
-    const displayTransactions: Transaction[] = transactions.slice(0, 4);
+    const displayTransactions: Transaction[] = transactions.transactions.slice(0, 4);
 
     return (
         <div className="w-full h-full flex flex-col bg-gray-500 rounded-2xl overflow-hidden">

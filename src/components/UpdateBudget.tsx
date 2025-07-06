@@ -1,6 +1,5 @@
 import { setBudget } from "@/lib/features/budgetSlice";
 import { AppDispatch } from "@/lib/store";
-import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 type Props = {

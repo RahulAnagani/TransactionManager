@@ -1,14 +1,14 @@
-import CreatableSelect from 'react-select/creatable';
+
 import { MdClose, MdPadding } from "react-icons/md";
 import DatePicker from "react-datepicker";
 import { useState } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
 import TextareaAutosize from 'react-textarea-autosize';
-import { SingleValue } from 'react-select/animated';
-import { color } from 'framer-motion';
 import Select from 'react-select';
-
-const NewTransaction=()=>{
+type props={
+    closer:()=>void,
+}
+const NewTransaction=({closer}:props)=>{
     const options=[
         {value:'groceries',label:"Groceries"},
         {value:'medical',label:"Medical"},
@@ -54,9 +54,8 @@ const NewTransaction=()=>{
                                 date:date.toISOString()
                             })});
                         const data=await resp.json();
-                        console.log(data)
                 }} className="bg-white w-[75%] flex sm:flex-col lg:flex-row md:flex-col flex-col h-[75%]  relative rounded">
-                    <MdClose onClick={()=>{}} className="absolute text-2xl text-black top-5 left-5 cursor-pointer"/>
+                    <MdClose onClick={()=>{closer()}} className="absolute text-2xl text-black top-5 left-5 cursor-pointer"/>
                     <div className="w-[100%] lg:w-[50%]  h-[25%] md:h-[25%] lg:h-[100%]  flex justify-center items-center">
                         <div className="flex flex-col gap-3 justify-center items-center">
                         <h1 className="text-gray-700 text-2xl">NEW TRANSACTION</h1>
