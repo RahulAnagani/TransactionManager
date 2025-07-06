@@ -28,8 +28,6 @@ export default function Monthly(){
         }} className={`text-3xl ${x==7?"rotate-180":""}  mr-4 mt-4 cursor-pointer font-bold`}/>
                                     <ResponsiveContainer>
                                         <BarChart
-                                        width={"100%"}
-                                        height={"100%"}
                                         className=""
                                         data={x==0?spendingData.slice(0,6):spendingData.slice(x-1,12)}
                                         margin={{
