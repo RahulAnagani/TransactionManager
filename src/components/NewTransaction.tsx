@@ -5,6 +5,9 @@ import { useState } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
 import TextareaAutosize from 'react-textarea-autosize';
 import Select from 'react-select';
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/lib/store";
+import { addTransaction } from "@/lib/features/transactionsSlice";
 type props={
     closer:()=>void,
 }
@@ -37,6 +40,7 @@ const NewTransaction=({closer}:props)=>{
     const [amount, setAmount] = useState<string>('');
     const [category, setCategory] = useState<string | null>(null);
     const [description, setDescription] = useState<string>('');
+    const dispatch=useDispatch<AppDispatch>();
     return (
         <>
             <div className="bg-black/80  w-screen z-50 h-screen flex justify-center items-center bottom-[0.2%] fixed">
@@ -45,7 +49,7 @@ const NewTransaction=({closer}:props)=>{
                         if(!category||!amount){
                             return;
                         }
-                        const date = new Date(Date.UTC(2025, 6, 1, 9, 0, 0))
+                        const date = new Date()
                         const resp=await fetch(`/api/transactions`,{method:"POST",headers:{'Content-Type':"Application/json"}
                             ,body:JSON.stringify({
                                 description,
@@ -54,9 +58,11 @@ const NewTransaction=({closer}:props)=>{
                                 date:date.toISOString()
                             })});
                         const data=await resp.json();
+                        dispatch(addTransaction({transaction:data.newTransaction}))
                         setAmount("");
                         setCategory("");
                         setDescription("");
+                        const res=await fetch(`/api/budget`)
                         closer()
                 }} className="bg-white w-[75%] flex sm:flex-col lg:flex-row md:flex-col flex-col h-[75%]  relative rounded">
                     <MdClose onClick={()=>{closer()}} className="absolute text-2xl text-black top-5 left-5 cursor-pointer"/>

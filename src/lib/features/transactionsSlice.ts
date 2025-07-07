@@ -34,9 +34,13 @@ const transactionSlice=createSlice({
         state.transactions=state.transactions.filter((ele)=>{
             return ele._id!=action.payload.id
         })
+    },
+    addTransaction:(state,action:PayloadAction<{transaction:transaction}>)=>{
+        console.log(action.payload)
+        state.transactions.unshift(action.payload.transaction)
     }
 }
 })
 
-export const {setTransactions,updateTransaction,deleteTransaction} = transactionSlice.actions;
+export const {setTransactions,updateTransaction,deleteTransaction,addTransaction} = transactionSlice.actions;
 export default transactionSlice

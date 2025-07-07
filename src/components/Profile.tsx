@@ -3,11 +3,8 @@ import {
     FaUtensils, 
     FaHome, 
     FaCar, 
-    FaFilm, 
     FaShoppingBag, 
-    FaLightbulb, 
     FaStethoscope, 
-    FaBook, 
     FaDollarSign,
     FaEye,
     FaPlus,
@@ -38,7 +35,6 @@ interface TransactionResponse {
 interface ProfileProps {
     onViewAllTransactions?: () => void;
     onAddTransaction?: () => void;
-    onEditTransaction?: () => void;
 }
 
 type CategoryType = 'food' | 'rent' | 'transport' | 'medical' | 'groceries' | 'other';
@@ -47,7 +43,7 @@ interface CategoryIcons {
     [key: string]: React.ComponentType<{ className?: string; size?: number }>;
 }
 
-export default function Profile({ onViewAllTransactions, onAddTransaction, onEditTransaction }: ProfileProps) {
+export default function Profile({ onViewAllTransactions, onAddTransaction }: ProfileProps) {
     const [loading, setLoading] = useState<boolean>(true);
     const date: Date = new Date();
     const transactions=useSelector((state:RootState)=>state.transactions);
@@ -176,7 +172,7 @@ export default function Profile({ onViewAllTransactions, onAddTransaction, onEdi
                                 <span className="lg:hidden">Add</span>
                             </button>
                             <button
-                                onClick={onEditTransaction}
+                                onClick={onViewAllTransactions}
                                 className="flex-1 bg-white/20 hover:bg-white/30 text-white px-3 py-2 lg:px-4 lg:py-3 rounded-lg transition-all duration-200 backdrop-blur-sm flex items-center justify-center gap-2 font-medium text-sm"
                             >
                                 <FaEdit size={12} />
