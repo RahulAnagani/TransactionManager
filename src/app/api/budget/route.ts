@@ -16,10 +16,25 @@ export async function GET(req:NextRequest){
             year:year,
             month:month
         });
-        console.log(budget)
         if(budget.length===0){
             const pspk=await Budget.create({year:year,month:month});
             return NextResponse.json({success:true,budget:[pspk]},{status:200})
+        }
+        const startDate=new Date(year,month-1,1);
+        const endDate=new Date(year,month,1);
+
+        const transactions=await Transactions.find({
+                    date:{
+                        $gte:startDate,
+                        $lt:endDate
+                    }
+        });
+        const spent=transactions.reduce((total,ele)=>total+ele.amount,0);
+        if(budget[0].budget-spent!==budget[0].balance){
+            await Budget.findByIdAndUpdate(
+                {_id:budget[0]._id}
+                ,{balance:budget[0].budget-spent}
+            )
         }
         return NextResponse.json({success:true,budget},{status:200});
     }

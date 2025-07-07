@@ -34,18 +34,18 @@ export default function UpdateTransaction({changeHandler}:Props){
   }, []);
     
     if (loading) {
-    return (
+  return (
     <div className="w-screen h-screen flex justify-center items-center absolute z-50 bg-gray-500/50">
-      <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
-        <div className="animate-pulse">
-          <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
-          <div className="h-10 bg-gray-200 rounded mb-4"></div>
+      <div className="w-[75%] sm:w-[90%] p-6 bg-white rounded-lg shadow-lg max-w-md">
+        <div className="animate-pulse space-y-4">
+          <div className="h-6 bg-gray-200 rounded w-2/3"></div>
+          <div className="h-10 bg-gray-200 rounded"></div>
           <div className="h-10 bg-gray-200 rounded"></div>
         </div>
       </div>
     </div>
-    );
-  }
+  );
+}
 
     return (
     <div className="w-screen h-screen flex justify-center items-center absolute z-50 bg-gray-500/50">

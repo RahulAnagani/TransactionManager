@@ -84,17 +84,17 @@ export default function Profile({ onViewAllTransactions, onAddTransaction, onEdi
         }).format(amount);
     };
 
-    const getCategoryIcon = (category: string): React.ComponentType<{ className?: string; size?: number }> => {
-        const icons: CategoryIcons = {
-            food: FaUtensils,
-            rent: FaHome,
-            transport: FaCar,
-            medical: FaStethoscope,
-            groceries: FaShoppingBag,
-            other: FaDollarSign
+        const getCategoryIcon = (category: string): React.ComponentType<{ className?: string; size?: number }> => {
+            const icons: CategoryIcons = {
+                food: FaUtensils,
+                rent: FaHome,
+                transport: FaCar,
+                medical: FaStethoscope,
+                groceries: FaShoppingBag,
+                other: FaDollarSign
+            };
+            return icons[category] || icons.other;
         };
-        return icons[category] || icons.other;
-    };
 
     const displayTransactions: Transaction[] = transactions.transactions.slice(0, 4);
 
