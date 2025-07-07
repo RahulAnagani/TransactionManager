@@ -54,6 +54,10 @@ const NewTransaction=({closer}:props)=>{
                                 date:date.toISOString()
                             })});
                         const data=await resp.json();
+                        setAmount("");
+                        setCategory("");
+                        setDescription("");
+                        closer()
                 }} className="bg-white w-[75%] flex sm:flex-col lg:flex-row md:flex-col flex-col h-[75%]  relative rounded">
                     <MdClose onClick={()=>{closer()}} className="absolute text-2xl text-black top-5 left-5 cursor-pointer"/>
                     <div className="w-[100%] lg:w-[50%]  h-[25%] md:h-[25%] lg:h-[100%]  flex justify-center items-center">

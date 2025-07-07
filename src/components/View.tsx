@@ -1,12 +1,14 @@
 import { MdClose } from "react-icons/md";
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
-import { useSelector } from "react-redux";
-import { RootState } from "@/lib/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/lib/store";
 import { FaCar, FaDollarSign, FaEye, FaHome, FaShoppingBag, FaStethoscope, FaUtensils } from "react-icons/fa";
 import { FaPencil, FaStreetView } from "react-icons/fa6";
 import Select from 'react-select';
 import TextareaAutosize from 'react-textarea-autosize';
+import { deleteTransaction, setTransactions, updateTransaction } from "@/lib/features/transactionsSlice";
+import UpdateTransaction from "./UpdateBudget";
 
 type props = {
     closer: () => void,
@@ -75,7 +77,7 @@ const ViewTransaction = ({ closer }: props) => {
     const [amount, setAmount] = useState<string>('');
     const [category, setCategory] = useState<SelectOption | null>(null);
     const [description, setDescription] = useState<string>('');
-    const [currentId, setCurrentId] = useState<string>("");
+    const disp=useDispatch<AppDispatch>()
 
     useEffect(() => {
         const fetchIt = async () => {
@@ -87,7 +89,6 @@ const ViewTransaction = ({ closer }: props) => {
                 const selectedCategory = categoryOptions.find(opt => opt.value === data.transaction.category);
                 setCategory(selectedCategory || null);
                 setStartDate(new Date(data.transaction.date));
-                setCurrentId(data.transaction._id);
             }
         }
         if (editor) {
@@ -180,7 +181,7 @@ const ViewTransaction = ({ closer }: props) => {
                     const data = await resp.json();
                 }} className="bg-white md:w-[50%] lg:w-[30%] sm:w-[75%] w-[75%] lg:- flex sm:flex-col lg:flex-row md:flex-col flex-col h-[75%] relative rounded-xl">
                     <MdClose onClick={() => { closer() }} className="absolute text-2xl text-black top-5 left-5 cursor-pointer" />
-                    <div className="w-full bg-gray-500 rounded-xl flex pt-15 overflow-y-auto flex-col gap-1 h-full">
+                    <div className="w-full bg-gray-500 rounded-xl flex pt-15 overflow-y-auto flex-col p-4 gap-1 h-full">
                         <h1 className="text-white flex items-center self-center j-center text-lg gap-1 font-bold">View and Edit your Transactions</h1>
                         {transactions.transactions.map((transaction: Transaction, index: number) => {
                             const IconComponent = getCategoryIcon(transaction.category);
@@ -283,24 +284,56 @@ const ViewTransaction = ({ closer }: props) => {
                                     <button
                                         type="button"
                                         onClick={async () => {
-                                            if (!category || !amount) return;
+                                            if (!category || !amount || !particular) return;
                                             
-                                            await fetch(`/api/transactions?id=${currentId}`, {
-                                                method: "PATCH",
+                                            const resp=await fetch(`/api/paritcular`, {
+                                                method: "POST",
                                                 headers: { 'Content-Type': 'application/json' },
                                                 body: JSON.stringify({
                                                     description,
                                                     amount: parseFloat(amount),
                                                     category: category.value,
-                                                    date: startDate.toISOString()
+                                                    id:particular
                                                 })
                                             });
+                                            const data=await resp.json();
+                                            disp(updateTransaction({transaction:data.transaction}));
                                             setEditor(false);
                                             setParticular("");
+                                            setCategory(null);
+                                            setAmount("");
+                                            setDescription("");
                                         }}
-                                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                        className=" bg-blue-600 cursor-pointer hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors focus:outline-none "
                                     >
-                                        Save Changes
+                                        Save 
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={async () => {
+                                            if (!category || !amount || !particular) return;
+                                            
+                                            const resp=await fetch(`/api/paritcular`, {
+                                                method: "DELETE",
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify({
+                                                    description,
+                                                    amount: parseFloat(amount),
+                                                    category: category.value,
+                                                    id:particular
+                                                })
+                                            });
+                                            const data=await resp.json();
+                                            disp(deleteTransaction({id:data.id}));
+                                            setEditor(false);
+                                            setParticular("");
+                                            setCategory(null);
+                                            setAmount("");
+                                            setDescription("");
+                                        }}
+                                        className=" bg-red-500 cursor-pointer hover:bg-red-400 text-white font-medium py-3 px-6 rounded-lg transition-colors focus:outline-none "
+                                    >
+                                        Delete
                                     </button>
                                     <button
                                         type="button"
@@ -308,11 +341,12 @@ const ViewTransaction = ({ closer }: props) => {
                                             setEditor(false);
                                             setParticular("");
                                         }}
-                                        className="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                                        className="px-6 py-3 border cursor-pointer border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                                     >
                                         Cancel
                                     </button>
                                 </div>
+                                
                             </div>
                         </div>}
                 </form>

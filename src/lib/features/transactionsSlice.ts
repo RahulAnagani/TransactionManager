@@ -24,9 +24,19 @@ const transactionSlice=createSlice({
     reducers:{
         setTransactions:(state,action:PayloadAction<{transactions:transaction[]}>)=>{
             state.transactions=action.payload.transactions
+    },
+    updateTransaction:(state,action:PayloadAction<{transaction:transaction}>)=>{
+        const ind=state.transactions.findIndex(item=>item._id===action.payload.transaction._id);
+        if(ind!=-1)
+        state.transactions[ind]=action.payload.transaction
+    },
+    deleteTransaction:(state,action:PayloadAction<{id:string}>)=>{
+        state.transactions=state.transactions.filter((ele)=>{
+            return ele._id!=action.payload.id
+        })
     }
 }
 })
 
-export const {setTransactions} = transactionSlice.actions;
+export const {setTransactions,updateTransaction,deleteTransaction} = transactionSlice.actions;
 export default transactionSlice
